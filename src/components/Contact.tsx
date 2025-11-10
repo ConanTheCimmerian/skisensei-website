@@ -28,7 +28,7 @@ export function Contact() {
     setSuccess(false);
     
 try {
-  const res = await fetch("https://skisensei.eu/api/sendEmail", {
+  const res = await fetch("/api/sendEmail", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(formData),
