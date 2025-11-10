@@ -21,24 +21,43 @@ export function Contact() {
   const [sending, setSending] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+
     e.preventDefault();
     setSending(true);
     setSuccess(false);
     
-    try {
-      await api.saveMessage(formData);
-      setSuccess(true);
-      setFormData({ name: "", email: "", phone: "", serviceType: "individual", numberOfPeople: "1", experienceLevel: "", message: "" });
-      
-      // Show success message
-      setTimeout(() => setSuccess(false), 5000);
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Wystąpił błąd przy wysyłaniu wiadomości. Proszę spróbować ponownie lub skontaktować się bezpośrednio na info.skiwithme@gmail.com");
-    } finally {
-      setSending(false);
-    }
+try {
+  const res = await fetch("https://skisensei.eu/api/sendEmail", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(formData),
+  });
+
+  const result = await res.json().catch(() => ({}));
+
+  if (res.ok && (result.success || !result.error)) {
+    setSuccess(true);
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+      serviceType: "individual",
+      numberOfPeople: "1",
+      experienceLevel: "",
+      message: "",
+    });
+  } else {
+    console.error("Błąd:", result.error);
+    alert("❌ Nie udało się wysłać wiadomości. Spróbuj ponownie.");
+  }
+} catch (error) {
+  console.error("Błąd sieci:", error);
+  alert("❌ Brak połączenia z serwerem. Spróbuj ponownie później.");
+} finally {
+  setSending(false);
+}
+
   };
 
   return (
