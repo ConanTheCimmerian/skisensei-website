@@ -1,95 +1,119 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ski Sensei Instructor</title>
 
-  <!DOCTYPE html>
-  <html lang="en">
-    <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Ski Sensei Instructor</title>
-    </head>
+    <!-- Ukryj pasek Google Translate i ewentualne przesunięcia -->
+    <style>
+      body {
+        top: 0 !important;
+      }
 
-    <div id="google_translate_element" style="display: none;"></div>
+      /* Baner Google Translate (iframe na górze strony) */
+      .goog-te-banner-frame.skiptranslate {
+        display: none !important;
+      }
 
-<script type="text/javascript">
-  function googleTranslateElementInit() {
-    new google.translate.TranslateElement(
-      {
-        pageLanguage: 'pl',
-        includedLanguages: 'en,no,nb,nn,de,fr,it,es,cs,sk,sl',
-        autoDisplay: false
-      },
-      'google_translate_element'
-    );
+      iframe.goog-te-banner-frame {
+        display: none !important;
+      }
 
-    var userLang =
-      (navigator.language || navigator.userLanguage || 'en')
-        .split('-')[0]
-        .toLowerCase();
-
-    var supported = ['en', 'no', 'nb', 'nn', 'de', 'fr', 'it', 'es', 'cs', 'sk', 'sl'];
-
-    if (supported.includes(userLang)) {
-      // Norwegia ma różne kody, mapujemy no -> nb
-      var target = userLang === 'no' ? 'nb' : userLang;
-
-      // Dajemy chwilę na załadowanie selecta Google Translate
-      setTimeout(function () {
-        var select = document.querySelector('#google_translate_element select');
-        if (!select) return;
-
-        for (var i = 0; i < select.options.length; i++) {
-          var val = select.options[i].value; // np. "en", "de"
-          if (val.indexOf(target) === 0) {
-            select.selectedIndex = i;
-            // wywołanie zmiany języka
-            var event = new Event('change');
-            select.dispatchEvent(event);
-            break;
-          }
-        }
-      }, 800);
-    }
-  }
-</script>
-
-<script type="text/javascript"
-  src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
-</script>
-
+      /* Drobne elementy UI Google, jeśli gdzieś się pojawią */
+      .goog-te-gadget-icon,
+      .goog-logo-link {
+        display: none !important;
+      }
+    </style>
+  </head>
 
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
 
-    <!-- Google Translate root (ukryty) -->
+    <!-- Niewidoczny kontener dla Google Translate -->
     <div id="google_translate_element" style="display: none;"></div>
 
     <script type="text/javascript">
       function googleTranslateElementInit() {
+        // Inicjalizacja widgetu (ukrytego)
         new google.translate.TranslateElement(
           {
-            pageLanguage: 'pl',
-            includedLanguages: 'pl,en,no,nb,nn',
+            pageLanguage: "pl",
+            includedLanguages:
+              "pl,en,no,nb,nn,de,fr,it,es,cs,sk,sl",
             autoDisplay: false
           },
-          'google_translate_element'
+          "google_translate_element"
         );
+
+        // Opcjonalna automatyczna podmiana języka na podstawie przeglądarki
+        try {
+          var userLang =
+            (navigator.language || navigator.userLanguage || "pl")
+              .split("-")[0]
+              .toLowerCase();
+
+          var supported = [
+            "pl",
+            "en",
+            "no",
+            "nb",
+            "nn",
+            "de",
+            "fr",
+            "it",
+            "es",
+            "cs",
+            "sk",
+            "sl"
+          ];
+
+          if (supported.includes(userLang)) {
+            var target = userLang === "no" ? "nb" : userLang;
+
+            setTimeout(function () {
+              var select = document.querySelector(
+                "#google_translate_element select"
+              );
+              if (!select) return;
+
+              for (var i = 0; i < select.options.length; i++) {
+                var val = select.options[i].value;
+                if (val.indexOf(target) === 0) {
+                  select.selectedIndex = i;
+                  select.dispatchEvent(new Event("change"));
+                  break;
+                }
+              }
+            }, 800);
+          }
+        } catch (e) {
+          console.log("Auto language detection error:", e);
+        }
       }
+
+      // Regularnie usuwaj baner, jeśli Google spróbuje go dodać
+      function removeGoogleTranslateBar() {
+        var banner = document.querySelector(".goog-te-banner-frame");
+        if (banner) {
+          banner.style.display = "none";
+        }
+        if (document.body && document.body.style.top !== "0px") {
+          document.body.style.top = "0px";
+        }
+      }
+
+      setInterval(removeGoogleTranslateBar, 800);
     </script>
 
+    <!-- Ładowanie skryptu Google Translate -->
     <script
       type="text/javascript"
-      src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
-    </script>
-  <script>
-  // usuń pasek Google Translate, jeśli się pojawi
-  const hideGoogleBar = () => {
-    const frame = document.querySelector('.goog-te-banner-frame');
-    if (frame) frame.style.display = 'none';
-    document.body.style.top = '0px';
-  };
-  setInterval(hideGoogleBar, 1000);
-</script>
-</body>
-</html>
+      src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+    ></script>
 
-  
+    <!-- Twoja aplikacja React / Vite -->
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
