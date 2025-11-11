@@ -52,15 +52,15 @@ export function Navigation() {
 
   return (
     <nav
-      className={`fixed top-10 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
           ? "bg-slate-950/95 backdrop-blur-sm shadow-lg"
           : "bg-slate-950/80 backdrop-blur-sm"
       }`}
     >
       <div className="container mx-auto px-4">
-        {/* Pasek nawigacji – wysoki na 64px, wszystko pionowo wyśrodkowane */}
-        <div className="flex items-center justify-between h-16">
+        {/* Zwiększamy wysokość belki: h-20 na mobile, h-16 na desktopie */}
+        <div className="flex items-center justify-between h-20 md:h-16">
           {/* LEWA STRONA: logo + flagi */}
           <div className="flex items-center gap-3 text-white">
             <span className="text-2xl tracking-tight font-[Kaushan_Script]">
@@ -160,7 +160,7 @@ export function Navigation() {
           </button>
         </div>
 
-        {/* MOBILE MENU – bez flag, tylko linki */}
+        {/* MOBILE MENU – bez flag */}
         {mobileMenuOpen && (
           <div className="md:hidden mt-2 pb-4 space-y-3 border-t border-slate-700 pt-4">
             <button
