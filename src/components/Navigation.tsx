@@ -1,7 +1,7 @@
 import { Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 
-// Funkcja do przełączania języka przez Google Translate
+// Przełączanie języka przez Google Translate
 function translatePage(lang: string) {
   const tryTranslate = () => {
     const select = document.querySelector(
@@ -23,7 +23,7 @@ function translatePage(lang: string) {
     }
   };
 
-  // jeśli skrypt Google jeszcze się nie wstrzyknął – spróbuj po chwili
+  // jeśli google jeszcze się nie zainicjalizował – spróbuj po chwili
   if (!(window as any).google || !(window as any).google.translate) {
     setTimeout(tryTranslate, 700);
   } else {
@@ -61,13 +61,13 @@ export function Navigation() {
     >
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          {/* LEWA STRONA: logo + flagi */}
+          {/* LEWA STRONA: logo + flagi (desktop) */}
           <div className="flex items-center gap-3 text-white">
             <span className="text-2xl tracking-tight font-[Kaushan_Script]">
               SKI SENSEI
             </span>
 
-            {/* Flagi - zaraz po prawej stronie logo, tylko desktop */}
+            {/* Flagi przy logo – tylko od md w górę */}
             <div className="hidden md:flex items-center gap-2 ml-2">
               <img
                 src="https://flagcdn.com/w20/pl.png"
@@ -141,6 +141,31 @@ export function Navigation() {
         {/* MOBILE MENU */}
         {mobileMenuOpen && (
           <div className="md:hidden mt-4 pb-4 space-y-3 border-t border-slate-700 pt-4">
+            {/* Flagi w menu mobilnym */}
+            <div className="flex items-center gap-3 mb-2">
+              <span className="text-slate-400 text-sm mr-2">
+                Wybierz język:
+              </span>
+              <img
+                src="https://flagcdn.com/w20/pl.png"
+                alt="Polski"
+                onClick={() => translatePage("pl")}
+                className="cursor-pointer hover:scale-110 transition-transform"
+              />
+              <img
+                src="https://flagcdn.com/w20/gb.png"
+                alt="English"
+                onClick={() => translatePage("en")}
+                className="cursor-pointer hover:scale-110 transition-transform"
+              />
+              <img
+                src="https://flagcdn.com/w20/no.png"
+                alt="Norsk"
+                onClick={() => translatePage("no")}
+                className="cursor-pointer hover:scale-110 transition-transform"
+              />
+            </div>
+
             <button
               onClick={() => scrollToSection("about")}
               className="block w-full text-left text-slate-300 hover:text-white transition-colors py-2"
