@@ -74,7 +74,7 @@ try {
             Zarezerwuj Lekcję
           </h2>
           <p className="text-xl text-slate-300">
-            Gotowy/a podnieść swoje umiejętności narciarskie? Skontaktuj się aby umówić lekcję
+           Gotowy/a podnieść swoje umiejętności narciarskie?Wybierz lekcję, Full Day, Custom Experience lub Social Media Day — dopasowane do Twojego stylu i celów.
           </p>
         </motion.div>
 
