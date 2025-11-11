@@ -23,7 +23,6 @@ function translatePage(lang: string) {
     }
   };
 
-  // jeśli google jeszcze się nie zainicjalizował – spróbuj po chwili
   if (!(window as any).google || !(window as any).google.translate) {
     setTimeout(tryTranslate, 700);
   } else {
@@ -53,14 +52,15 @@ export function Navigation() {
 
   return (
     <nav
-      className={`fixed top-8 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-10 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
           ? "bg-slate-950/95 backdrop-blur-sm shadow-lg"
           : "bg-slate-950/80 backdrop-blur-sm"
       }`}
     >
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
+      <div className="container mx-auto px-4">
+        {/* Pasek nawigacji – wysoki na 64px, wszystko pionowo wyśrodkowane */}
+        <div className="flex items-center justify-between h-16">
           {/* LEWA STRONA: logo + flagi */}
           <div className="flex items-center gap-3 text-white">
             <span className="text-2xl tracking-tight font-[Kaushan_Script]">
@@ -89,7 +89,7 @@ export function Navigation() {
               />
             </div>
 
-            {/* Flagi na DESKTOP – obok logo jak wcześniej */}
+            {/* Flagi na DESKTOP – obok logo */}
             <div className="hidden md:flex items-center gap-2 ml-2">
               <img
                 src="https://flagcdn.com/w20/pl.png"
@@ -160,9 +160,9 @@ export function Navigation() {
           </button>
         </div>
 
-        {/* MOBILE MENU – już BEZ flag (są w headerze) */}
+        {/* MOBILE MENU – bez flag, tylko linki */}
         {mobileMenuOpen && (
-          <div className="md:hidden mt-4 pb-4 space-y-3 border-t border-slate-700 pt-4">
+          <div className="md:hidden mt-2 pb-4 space-y-3 border-t border-slate-700 pt-4">
             <button
               onClick={() => scrollToSection("about")}
               className="block w-full text-left text-slate-300 hover:text-white transition-colors py-2"
