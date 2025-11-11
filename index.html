@@ -7,9 +7,80 @@
       <title>Ski Sensei Instructor</title>
     </head>
 
-    <body>
-      <div id="root"></div>
-      <script type="module" src="/src/main.tsx"></script>
-    </body>
-  </html>
+    <div id="google_translate_element" style="display: none;"></div>
+
+<script type="text/javascript">
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+      {
+        pageLanguage: 'pl',
+        includedLanguages: 'en,no,nb,nn,de,fr,it,es,cs,sk,sl',
+        autoDisplay: true
+      },
+      'google_translate_element'
+    );
+
+    var userLang =
+      (navigator.language || navigator.userLanguage || 'en')
+        .split('-')[0]
+        .toLowerCase();
+
+    var supported = ['en', 'no', 'nb', 'nn', 'de', 'fr', 'it', 'es', 'cs', 'sk', 'sl'];
+
+    if (supported.includes(userLang)) {
+      // Norwegia ma różne kody, mapujemy no -> nb
+      var target = userLang === 'no' ? 'nb' : userLang;
+
+      // Dajemy chwilę na załadowanie selecta Google Translate
+      setTimeout(function () {
+        var select = document.querySelector('#google_translate_element select');
+        if (!select) return;
+
+        for (var i = 0; i < select.options.length; i++) {
+          var val = select.options[i].value; // np. "en", "de"
+          if (val.indexOf(target) === 0) {
+            select.selectedIndex = i;
+            // wywołanie zmiany języka
+            var event = new Event('change');
+            select.dispatchEvent(event);
+            break;
+          }
+        }
+      }, 800);
+    }
+  }
+</script>
+
+<script type="text/javascript"
+  src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+</script>
+
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Google Translate root (ukryty) -->
+    <div id="google_translate_element" style="display: none;"></div>
+
+    <script type="text/javascript">
+      function googleTranslateElementInit() {
+        new google.translate.TranslateElement(
+          {
+            pageLanguage: 'pl',
+            includedLanguages: 'pl,en,no,nb,nn',
+            autoDisplay: false
+          },
+          'google_translate_element'
+        );
+      }
+    </script>
+
+    <script
+      type="text/javascript"
+      src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+    </script>
+  </body>
+</html>
+
   

@@ -3,22 +3,31 @@ import { useState, useEffect } from "react";
 
 // Funkcja do przełączania języka przez Google Translate
 function translatePage(lang: string) {
-  const select = document.querySelector(
-    "#google_translate_element select"
-  ) as HTMLSelectElement | null;
+  const tryTranslate = () => {
+    const select = document.querySelector(
+      "#google_translate_element select"
+    ) as HTMLSelectElement | null;
 
-  if (!select) {
-    alert("Tłumaczenie jeszcze się ładuje 😅");
-    return;
-  }
-
-  for (let i = 0; i < select.options.length; i++) {
-    const option = select.options[i];
-    if (option.value.indexOf(lang) === 0) {
-      select.selectedIndex = i;
-      select.dispatchEvent(new Event("change"));
-      break;
+    if (!select) {
+      console.log("Google Translate nie jest jeszcze gotowy.");
+      return;
     }
+
+    for (let i = 0; i < select.options.length; i++) {
+      const option = select.options[i];
+      if (option.value.indexOf(lang) === 0) {
+        select.selectedIndex = i;
+        select.dispatchEvent(new Event("change"));
+        break;
+      }
+    }
+  };
+
+  // jeśli skrypt Google jeszcze się nie wstrzyknął – spróbuj po chwili
+  if (!(window as any).google || !(window as any).google.translate) {
+    setTimeout(tryTranslate, 700);
+  } else {
+    tryTranslate();
   }
 }
 
