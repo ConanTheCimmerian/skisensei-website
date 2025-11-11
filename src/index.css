@@ -3508,3 +3508,10 @@ html {
     transform: none;
   }
 }
+/* Ukryj pasek Google Translate u góry */
+.goog-te-banner-frame.skiptranslate {
+  display: none !important;
+}
+body {
+  top: 0 !important; /* cofnięcie przesunięcia strony przez pasek */
+}
