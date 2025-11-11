@@ -52,23 +52,44 @@ export function Navigation() {
   };
 
   return (
-<nav
-  className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-    scrolled
-      ? "bg-slate-950/95 backdrop-blur-sm shadow-lg"
-      : "bg-slate-950/80 backdrop-blur-sm"
-  }`}
->
-
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? "bg-slate-950/95 backdrop-blur-sm shadow-lg"
+          : "bg-slate-950/80 backdrop-blur-sm"
+      }`}
+    >
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          {/* LEWA STRONA: logo + flagi (desktop) */}
+          {/* LEWA STRONA: logo + flagi */}
           <div className="flex items-center gap-3 text-white">
             <span className="text-2xl tracking-tight font-[Kaushan_Script]">
               SKI SENSEI
             </span>
 
-            {/* Flagi przy logo – tylko od md w górę */}
+            {/* Flagi na MOBILE – zawsze widoczne obok logo */}
+            <div className="flex md:hidden items-center gap-2 ml-2">
+              <img
+                src="https://flagcdn.com/w20/pl.png"
+                alt="Polski"
+                onClick={() => translatePage("pl")}
+                className="cursor-pointer hover:scale-110 transition-transform"
+              />
+              <img
+                src="https://flagcdn.com/w20/gb.png"
+                alt="English"
+                onClick={() => translatePage("en")}
+                className="cursor-pointer hover:scale-110 transition-transform"
+              />
+              <img
+                src="https://flagcdn.com/w20/no.png"
+                alt="Norsk"
+                onClick={() => translatePage("no")}
+                className="cursor-pointer hover:scale-110 transition-transform"
+              />
+            </div>
+
+            {/* Flagi na DESKTOP – obok logo jak wcześniej */}
             <div className="hidden md:flex items-center gap-2 ml-2">
               <img
                 src="https://flagcdn.com/w20/pl.png"
@@ -139,34 +160,9 @@ export function Navigation() {
           </button>
         </div>
 
-        {/* MOBILE MENU */}
+        {/* MOBILE MENU – już BEZ flag (są w headerze) */}
         {mobileMenuOpen && (
           <div className="md:hidden mt-4 pb-4 space-y-3 border-t border-slate-700 pt-4">
-            {/* Flagi w menu mobilnym */}
-            <div className="flex items-center gap-3 mb-2">
-              <span className="text-slate-400 text-sm mr-2">
-                Wybierz język:
-              </span>
-              <img
-                src="https://flagcdn.com/w20/pl.png"
-                alt="Polski"
-                onClick={() => translatePage("pl")}
-                className="cursor-pointer hover:scale-110 transition-transform"
-              />
-              <img
-                src="https://flagcdn.com/w20/gb.png"
-                alt="English"
-                onClick={() => translatePage("en")}
-                className="cursor-pointer hover:scale-110 transition-transform"
-              />
-              <img
-                src="https://flagcdn.com/w20/no.png"
-                alt="Norsk"
-                onClick={() => translatePage("no")}
-                className="cursor-pointer hover:scale-110 transition-transform"
-              />
-            </div>
-
             <button
               onClick={() => scrollToSection("about")}
               className="block w-full text-left text-slate-300 hover:text-white transition-colors py-2"
