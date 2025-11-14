@@ -10,6 +10,9 @@ import { Availability } from "./components/Availability";
 import { Contact } from "./components/Contact";
 // import { AdminPanel } from "./components/AdminPanel"; // Disabled - Supabase connection issue
 
+// 🔹 IMPORT ANALITYKI – tu, razem z innymi importami:
+import { Analytics } from "@vercel/analytics/react";
+
 export default function App() {
   return (
     <div className="min-h-screen bg-slate-950">
@@ -23,7 +26,10 @@ export default function App() {
       <Pricing />
       <Contact />
       <MediaGallery />
-      {/* <AdminPanel /> */} {/* Disabled - Supabase connection issue */}
+      {/* <AdminPanel /> {/* Disabled - Supabase connection issue */} */}
+
+      {/* 🔹 KOMPONENT ANALITYKI – na samym końcu w drzewie */}
+      <Analytics />
     </div>
   );
 }
