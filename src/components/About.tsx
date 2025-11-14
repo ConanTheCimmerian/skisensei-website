@@ -4,6 +4,8 @@ import { api } from "../utils/api";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { YouTubePlayerWithVolume } from "./YouTubePlayerWithVolume";
 import { Target, Heart, BookOpen, Repeat, Compass, Mountain, Award } from "lucide-react";
+import { useLanguage } from "../contexts/LanguageContext";
+import { getAboutText } from "../translations/about";
 
 const defaultKarateImages = [
   "https://www.dropbox.com/scl/fi/txz4h36lcxbftzjyw4dvr/20220918_123451.jpg?rlkey=buvbz0mo5jgesbkw4wyz09kj6&st=4b1ysio7&raw=1",
@@ -166,7 +168,53 @@ function PortraitBackgroundSlider() {
   );
 }
 
+function TeachingBackgroundSlider() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const teachingImages = [
+    "https://www.dropbox.com/scl/fi/qmu1kc53zia0aflf41l67/Zrzut-ekranu-2025-08-12-201247.png?rlkey=94h6dbslmx5hf0gmjtqaxotyl&raw=1",
+    "https://www.dropbox.com/scl/fi/s6c8ywrog75z8vrpn9lpv/Snapshot_339.JPG?rlkey=kjqsjlhmtd4boczv5yd4rjuef&raw=1",
+    "https://www.dropbox.com/scl/fi/ugllb9g32abv0so9ktrmk/Snapshot_337.JPG?rlkey=s8bhut7vercp8fq3otw3n7x0k&raw=1",
+    "https://www.dropbox.com/scl/fi/csf7nipk86n3byrxl7irv/20240309_133331.jpg?rlkey=7svp4f4i69l80vwpvu62itxmu&raw=1",
+    "https://www.dropbox.com/scl/fi/22lp0af7b6ta9npbfjwy1/Snapshot_12.JPG?rlkey=0ye0n61mpmcl1akq6udpvpmbg&raw=1",
+    "https://www.dropbox.com/scl/fi/lht0v4rv57sr29wbkc549/Snapshot_336.JPG?rlkey=uuq22s4zm5i80nzfqn1i36xlz&raw=1",
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % teachingImages.length);
+    }, 5000); // 5 sekund na zdjęcie
+    return () => clearInterval(timer);
+  }, [teachingImages.length]);
+
+  return (
+    <div className="absolute inset-0 overflow-hidden rounded-3xl">
+      {teachingImages.map((image, index) => (
+        <div
+          key={index}
+          className={`absolute inset-0 transition-opacity duration-1000 ${
+            index === currentSlide ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          <img
+            src={image}
+            alt={`Teaching moment ${index + 1}`}
+            className="w-full h-full object-cover"
+            style={{
+              objectPosition: 'center center'
+            }}
+          />
+        </div>
+      ))}
+      {/* Nakładka dla czytelności tekstu */}
+      <div className="absolute inset-0 bg-slate-900/60"></div>
+    </div>
+  );
+}
+
 export function About() {
+  const { language } = useLanguage();
+  const aboutText = getAboutText(language);
+
   return (
     <section id="about" className="py-24 bg-slate-900">
       <div className="container mx-auto px-4">
@@ -187,9 +235,7 @@ export function About() {
               {/* Sekcja Przedstawienie - góra */}
               <div className="text-center">
                 <p className="text-lg text-slate-200 leading-relaxed max-w-4xl mx-auto">
-                  Witaj, to ja - <span className="text-white">Dawid Kowalczyk</span>, pasjonat gór i narciarstwa. 
-                  W latach 2009-2013 student i członek sekcji narciarskiej oraz sekcji karate{" "}
-                  <span className="text-blue-300">AZS Politechnika Krakowska</span>. Obie te pasje aktywnie rozwijam.
+                  {aboutText.introText} <span className="text-blue-300">{aboutText.introHighlight}</span>{aboutText.introText2}
                 </p>
               </div>
             </div>
@@ -198,7 +244,7 @@ export function About() {
             <div className="relative z-10 px-8 md:px-12 lg:px-16 pb-8 md:pb-12 lg:pb-16">
               <div className="text-center">
                 <p className="text-base text-slate-200 leading-relaxed max-w-4xl mx-auto">
-                  <span className="text-blue-300">SkiSensei</span> to marka, która autentyczniej oddaje to, kim jestem jako instruktor i twórca. Wcześniej <span className="text-slate-100">Skiwithme</span>.
+                  <span className="text-blue-300">SkiSensei</span> {aboutText.rebrandingText} <span className="text-slate-100">{aboutText.rebrandingOld}</span>.
                 </p>
               </div>
             </div>
@@ -220,19 +266,19 @@ export function About() {
             {/* Content */}
             <div className="relative z-10 w-full">
               <h3 className="text-3xl md:text-4xl lg:text-5xl text-white mb-8 text-center">
-                Dlaczego „Sensei"
+                {aboutText.whySenseiTitle}
               </h3>
 
               <div className="space-y-5 text-base md:text-lg text-slate-300 leading-relaxed max-w-4xl mx-auto">
                 <p>
-                  Od wielu lat trenuję karate i choć wciąż jestem w drodze do tytułu Sensei to znajomi na stoku zaczęli tak mnie nazywać i choć nie czułem się na to gotowy to po prostu się przyjęło.
+                  {aboutText.whySenseiP1}
                 </p>
                 <p>
-                  To właśnie karate ukształtowało mnie jako człowieka i instruktora: nauczyło{" "}
-                  <span className="text-blue-400">cierpliwości, dyscypliny, skupienia i dążenia do perfekcji</span>.
+                  {aboutText.whySenseiP2}{" "}
+                  <span className="text-blue-400">{aboutText.whySenseiHighlight}</span>.
                 </p>
                 <p className="text-lg md:text-xl text-white italic text-center pt-4">
-                  Dziś uważam, że duch i filozofia karate idealnie oddają mój styl nauczania na stoku.
+                  {aboutText.whySenseiP3}
                 </p>
               </div>
             </div>
@@ -245,113 +291,118 @@ export function About() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="max-w-5xl mx-auto mb-20"
+          className="max-w-6xl mx-auto mb-20"
         >
-          <h3 className="text-3xl md:text-4xl text-white mb-6 text-center">
-            Jak uczę
-          </h3>
-          <p className="text-lg text-slate-300 text-center mb-12 max-w-3xl mx-auto leading-relaxed">
-            Narciarstwo to dla mnie sztuka ruchu, równowagi i świadomości ciała.
-            Symetryczny rozwój 4 głównych umiejętności narciarskich: równowaga, nacisk, krawędziowanie, rotacja i kontrrotacja.
-          </p>
+          <div className="relative rounded-3xl overflow-hidden min-h-[800px] md:min-h-[900px] flex items-center">
+            {/* Background Slider */}
+            <TeachingBackgroundSlider />
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="bg-slate-800/30 backdrop-blur-sm p-6 rounded-2xl border border-slate-700/50"
-            >
-              <Target className="w-10 h-10 text-blue-400 mb-4" />
-              <h4 className="text-white mb-2">Precyzyjna analiza ruchu</h4>
-              <p className="text-slate-400 text-sm">
-                Każdy szczegół ma znaczenie
+            {/* Content */}
+            <div className="relative z-10 w-full p-8 md:p-12 lg:p-16">
+              <h3 className="text-3xl md:text-4xl text-white mb-6 text-center">
+                {aboutText.howITeachTitle}
+              </h3>
+              <p className="text-lg text-slate-300 text-center mb-12 max-w-3xl mx-auto leading-relaxed">
+                {aboutText.howITeachSubtitle}
               </p>
-            </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="bg-slate-800/30 backdrop-blur-sm p-6 rounded-2xl border border-slate-700/50"
-            >
-              <Heart className="w-10 h-10 text-blue-400 mb-4" />
-              <h4 className="text-white mb-2">Cierpliwość i spokój</h4>
-              <p className="text-slate-400 text-sm">
-                Bez stresu, z pełnym zrozumieniem
-              </p>
-            </motion.div>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                  className="bg-slate-800/30 backdrop-blur-sm p-6 rounded-2xl border border-slate-700/50"
+                >
+                  <Target className="w-10 h-10 text-blue-400 mb-4" />
+                  <h4 className="text-white mb-2">{aboutText.principle1Title}</h4>
+                  <p className="text-slate-400 text-sm">
+                    {aboutText.principle1Desc}
+                  </p>
+                </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="bg-slate-800/30 backdrop-blur-sm p-6 rounded-2xl border border-slate-700/50"
-            >
-              <BookOpen className="w-10 h-10 text-blue-400 mb-4" />
-              <h4 className="text-white mb-2">Biomechanika skrętu</h4>
-              <p className="text-slate-400 text-sm">
-                Pełne zrozumienie ruchu
-              </p>
-            </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className="bg-slate-800/30 backdrop-blur-sm p-6 rounded-2xl border border-slate-700/50"
+                >
+                  <Heart className="w-10 h-10 text-blue-400 mb-4" />
+                  <h4 className="text-white mb-2">{aboutText.principle2Title}</h4>
+                  <p className="text-slate-400 text-sm">
+                    {aboutText.principle2Desc}
+                  </p>
+                </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="bg-slate-800/30 backdrop-blur-sm p-6 rounded-2xl border border-slate-700/50"
-            >
-              <Repeat className="w-10 h-10 text-blue-400 mb-4" />
-              <h4 className="text-white mb-2">Perfekcyjna demonstracja techniki</h4>
-              <p className="text-slate-400 text-sm">
-                Nauka przez wzór i poprawne powtórzenia
-              </p>
-            </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                  className="bg-slate-800/30 backdrop-blur-sm p-6 rounded-2xl border border-slate-700/50"
+                >
+                  <BookOpen className="w-10 h-10 text-blue-400 mb-4" />
+                  <h4 className="text-white mb-2">{aboutText.principle3Title_alt}</h4>
+                  <p className="text-slate-400 text-sm">
+                    {aboutText.principle3Desc_alt}
+                  </p>
+                </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.5 }}
-              className="bg-slate-800/30 backdrop-blur-sm p-6 rounded-2xl border border-slate-700/50"
-            >
-              <Compass className="w-10 h-10 text-blue-400 mb-4" />
-              <h4 className="text-white mb-2">Równowaga i koordynacja</h4>
-              <p className="text-slate-400 text-sm">
-                Budowanie świadomości ciała
-              </p>
-            </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.4 }}
+                  className="bg-slate-800/30 backdrop-blur-sm p-6 rounded-2xl border border-slate-700/50"
+                >
+                  <Repeat className="w-10 h-10 text-blue-400 mb-4" />
+                  <h4 className="text-white mb-2">{aboutText.principle4Title_alt}</h4>
+                  <p className="text-slate-400 text-sm">
+                    {aboutText.principle4Desc_alt}
+                  </p>
+                </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.6 }}
-              className="bg-slate-800/30 backdrop-blur-sm p-6 rounded-2xl border border-slate-700/50"
-            >
-              <Mountain className="w-10 h-10 text-blue-400 mb-4" />
-              <h4 className="text-white mb-2">Odwaga przekraczania granic</h4>
-              <p className="text-slate-400 text-sm">
-                W bezpiecznym środowisku
-              </p>
-            </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.5 }}
+                  className="bg-slate-800/30 backdrop-blur-sm p-6 rounded-2xl border border-slate-700/50"
+                >
+                  <Compass className="w-10 h-10 text-blue-400 mb-4" />
+                  <h4 className="text-white mb-2">{aboutText.principle5Title_alt}</h4>
+                  <p className="text-slate-400 text-sm">
+                    {aboutText.principle5Desc_alt}
+                  </p>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.6 }}
+                  className="bg-slate-800/30 backdrop-blur-sm p-6 rounded-2xl border border-slate-700/50"
+                >
+                  <Mountain className="w-10 h-10 text-blue-400 mb-4" />
+                  <h4 className="text-white mb-2">{aboutText.principle6Title_alt}</h4>
+                  <p className="text-slate-400 text-sm">
+                    {aboutText.principle6Desc_alt}
+                  </p>
+                </motion.div>
+              </div>
+
+              <motion.p
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.7 }}
+                className="text-center text-slate-300 text-lg leading-relaxed max-w-3xl mx-auto"
+              >
+                {aboutText.howITeachSummary}
+              </motion.p>
+            </div>
           </div>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.7 }}
-            className="text-center text-slate-300 text-lg leading-relaxed max-w-3xl mx-auto"
-          >
-            Uczę wszechstronnych <span className="text-white">technik carvingowych i freeridowych</span>, 
-            które rozwijają umiejętności w każdych warunkach — zawsze w{" "}
-            <span className="text-white">bezpiecznym, kontrolowanym środowisku ośrodka narciarskiego</span>.
-          </motion.p>
         </motion.div>
 
         {/* Case Study: Rozwój Nelly */}
@@ -364,43 +415,40 @@ export function About() {
         >
           <div className="bg-gradient-to-br from-blue-900/20 to-slate-800/20 backdrop-blur-sm p-8 md:p-12 rounded-3xl border border-blue-500/20">
             <h3 className="text-3xl md:text-4xl text-white mb-4 text-center">
-              Case Study: Rozwój Nelly w 24 lekcjach
+              {aboutText.nellyCaseTitle}
             </h3>
             <p className="text-center text-lg text-slate-300 mb-2 max-w-3xl mx-auto leading-relaxed">
-              Zobacz jak wygląda realny progress z moimi lekcjami — <span className="text-white">od pierwszych skrętów do pewnych zjazdów 
-              i ćwiczeń koordynacyjno-równoważnych na czarnych trasach</span>. 
+              {aboutText.nellyCaseP1} <span className="text-white">{aboutText.nellyCaseP1Highlight}</span>. 
             </p>
             <p className="text-center text-slate-300 mb-2 max-w-3xl mx-auto leading-relaxed">
-              <span className="text-blue-400">24 lekcje rozłożone w 3 miesiącach sezonu</span> przyniosły super podstawy 
-              i głębokie zrozumienie technik narciarskich.
+              <span className="text-blue-400">{aboutText.nellyCaseP2}</span> {aboutText.nellyCaseP2Rest}
             </p>
             <p className="text-center text-slate-300 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Świetna perspektywa na przyszłość — niezależnie od tego, czy będzie to robić z radości, jaką jej to sprawia, 
-              czy z chęci rywalizacji sportowej.
+              {aboutText.nellyCaseP3}
             </p>
 
             <div className="grid md:grid-cols-3 gap-6">
               {/* Film 1: Początek */}
               <YouTubePlayerWithVolume 
                 videoId="s5dxDefPI9I"
-                title="Początek"
-                subtitle="Lekcje 1-8"
+                title={aboutText.nellyCaseVideo1Title}
+                subtitle={aboutText.nellyCaseVideo1Subtitle}
                 delay={0.1}
               />
 
               {/* Film 2: Rozwój */}
               <YouTubePlayerWithVolume 
                 videoId="IPCgJMJc3fI"
-                title="Rozwój"
-                subtitle="Lekcje 9-16"
+                title={aboutText.nellyCaseVideo2Title}
+                subtitle={aboutText.nellyCaseVideo2Subtitle}
                 delay={0.2}
               />
 
               {/* Film 3: Pewność i prędkość */}
               <YouTubePlayerWithVolume 
                 videoId="HJUAbj4nK5M"
-                title="Pewność i prędkość"
-                subtitle="Lekcje 17-24 • Czarne trasy"
+                title={aboutText.nellyCaseVideo3Title}
+                subtitle={aboutText.nellyCaseVideo3Subtitle}
                 delay={0.3}
               />
             </div>
@@ -416,20 +464,20 @@ export function About() {
           className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto mb-20"
         >
           <div className="text-center">
-            <div className="text-4xl md:text-5xl text-white mb-2">2010</div>
-            <div className="text-slate-400">Start nauczania</div>
+            <div className="text-4xl md:text-5xl text-white mb-2">{aboutText.statsYear}</div>
+            <div className="text-slate-400">{aboutText.statsYearDesc}</div>
           </div>
           <div className="text-center">
-            <div className="text-4xl md:text-5xl text-white mb-2">5</div>
-            <div className="text-slate-400">Lat intensywnego rozwoju</div>
+            <div className="text-4xl md:text-5xl text-white mb-2">{aboutText.statsYears}</div>
+            <div className="text-slate-400">{aboutText.statsYearsDesc}</div>
           </div>
           <div className="text-center">
-            <div className="text-4xl md:text-5xl text-white mb-2">ISIA</div>
-            <div className="text-slate-400">Level 3 Certified</div>
+            <div className="text-4xl md:text-5xl text-white mb-2">{aboutText.statsISIA}</div>
+            <div className="text-slate-400">{aboutText.statsISIADesc}</div>
           </div>
           <div className="text-center">
-            <div className="text-4xl md:text-5xl text-white mb-2">∞</div>
-            <div className="text-slate-400">Pasji i zaangażowania</div>
+            <div className="text-4xl md:text-5xl text-white mb-2">{aboutText.statsPassion}</div>
+            <div className="text-slate-400">{aboutText.statsPassionDesc}</div>
           </div>
         </motion.div>
 
@@ -441,41 +489,43 @@ export function About() {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="max-w-4xl mx-auto mb-20"
         >
-          <div className="bg-gradient-to-br from-blue-900/20 to-slate-800/20 backdrop-blur-sm p-8 md:p-12 rounded-3xl border border-blue-500/20">
-            <h3 className="text-3xl md:text-4xl text-white mb-6 text-center">
-              Moja droga
+          <div className="relative bg-gradient-to-br from-blue-900/20 to-slate-800/20 backdrop-blur-sm p-8 md:p-12 rounded-3xl border border-blue-500/20">
+            {/* Portrait Image - Right Top Corner */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              className="absolute top-4 right-4 md:top-6 md:right-6 w-32 h-32 md:w-40 md:h-40 lg:w-64 lg:h-64 rounded-full overflow-hidden shadow-2xl shadow-blue-500/30 z-10"
+            >
+              <ImageWithFallback
+                src="https://www.dropbox.com/scl/fi/1r0d1rpvvnq8829khf2hf/20250704_161857-2-1.png?rlkey=pysah1ikflu3ul017y7g5hzbt&st=53eshobn&raw=1"
+                alt="Ski Sensei Portrait"
+                className="w-full h-full object-cover"
+              />
+            </motion.div>
+
+            <h3 className="text-3xl md:text-4xl text-white mb-6 lg:pr-80">
+              {aboutText.myJourneyTitle}
             </h3>
             
             <div className="space-y-6 text-lg text-slate-300 leading-relaxed">
               {/* Narciarstwo */}
               <div>
-                <h4 className="text-xl text-white mb-3">
+                <h4 className="text-xl text-white mb-3 lg:pr-80">
                   <Award className="w-6 h-6 inline-block mr-2 text-blue-400" />
-                  Narciarstwo
+                  {aboutText.journeySkiingTitle}
                 </h4>
                 <div className="space-y-4">
-                  <p>
-                    Kontakt z nartami mam od małego — wyrosłem w <span className="text-white">Beskidzie Wyspowym</span>, 
-                    gdzie śnieg i stoki były naturalnym środowiskiem.
-                  </p>
-                  <p>
-                    W 2009 roku dołączyłem do <span className="text-blue-400">sekcji narciarskiej AZS Politechniki Krakowskiej</span>, 
-                    gdzie przez 4 lata (2009-2013) intensywnie rozwijałem swoje umiejętności. To tam zrodziła się moja pasja 
-                    do nauczania — zacząłem od <span className="text-white">2010 roku</span>, początkowo dorywczo, 
-                    z czasem coraz bardziej świadomie i profesjonalnie.
-                  </p>
-                  <p>
-                    Ostatnie pięć lat to jednak prawdziwa <span className="text-blue-400">eksplozja pasji i rozwoju</span>. 
-                    Poświęciłem temu każdą wolną chwilę: kolejne kursy, dziesiątki godzin treningów, 
-                    doskonalenie techniki i zdobycie kwalifikacji{" "}
-                    <span className="text-white">Pol-Ski Instructor (poziom międzynarodowy ISIA, Level 3)</span>{" "}
-                    z uprawnieniami do nauczania po angielsku.
-                  </p>
-                  <p>
-                    Nie zatrzymuję się — uczestniczę w webinarach, szkoleniach i kursach (m.in. lawinowym), 
-                    by w przyszłości dojść do najwyższego poziomu instruktora zawodowego{" "}
-                    <span className="text-white italic">(Level 4 – Maestro de Ski)</span>.
-                  </p>
+                  {/* Tylko P1 z paddingiem - obok zdjęcia */}
+                  <div className="lg:pr-80">
+                    <p className="whitespace-pre-line">{aboutText.journeySkiingP1}</p>
+                  </div>
+                  {/* P2 też jako jeden akapit z whitespace-pre-line */}
+                  <p className="whitespace-pre-line">{aboutText.journeySkiingP2}</p>
+                  {/* P3, P4 - pełna szerokość */}
+                  <p>{aboutText.journeySkiingP3}</p>
+                  <p>{aboutText.journeySkiingP4}</p>
                 </div>
               </div>
 
@@ -483,20 +533,11 @@ export function About() {
               <div className="pt-6 border-t border-white/10">
                 <h4 className="text-xl text-white mb-3">
                   <Target className="w-6 h-6 inline-block mr-2 text-blue-400" />
-                  Karate
+                  {aboutText.journeyKarateTitle}
                 </h4>
                 <div className="space-y-4">
-                  <p>
-                    W 2010 roku, równolegle z nauczaniem narciarstwa, zacząłem też rekreacyjnie trenować karate 
-                    w <span className="text-blue-400">sekcji AZS Politechniki Krakowskiej</span>. 
-                    Od tamtej pory trenuję regularnie i <span className="text-white">wciąż jestem w drodze do tytułu Sensei</span> — 
-                    aktualnie z brązowym pasem, coraz bliżej czarnego.
-                  </p>
-                  <p>
-                    To właśnie karate ukształtowało mnie jako człowieka i instruktora: nauczyło{" "}
-                    <span className="text-blue-400">cierpliwości, dyscypliny, skupienia i dążenia do perfekcji</span>. 
-                    Te wartości naturalnie przenoszę na stok narciarski.
-                  </p>
+                  <p>{aboutText.journeyKarateP1}</p>
+                  <p>{aboutText.journeyKarateP2}</p>
                 </div>
               </div>
 
@@ -504,19 +545,11 @@ export function About() {
               <div className="pt-6 border-t border-white/10">
                 <h4 className="text-xl text-white mb-3">
                   <Compass className="w-6 h-6 inline-block mr-2 text-blue-400" />
-                  Akrobatyka
+                  {aboutText.journeyAcrobaticsTitle}
                 </h4>
                 <div className="space-y-4">
-                  <p>
-                    Przez 2 lata trenowałem też rekreacyjnie <span className="text-white">akrobatykę w Krakowie</span> w{" "}
-                    <span className="text-blue-400">Stowarzyszeniu Instruktorów Niezależnych</span> na terenie sali Kraków Korona.
-                  </p>
-                  <p>
-                    Ten trening był niezwykle cennym doświadczeniem — <span className="text-blue-400">świadomość ciała w przestrzeni, 
-                    równowaga, koordynacja i kontrola ruchu</span> to umiejętności, które bezpośrednio przekładają się na 
-                    narciarstwo i nauczanie. Rozumienie biomechaniki ruchu z tej perspektywy daje mi dodatkowe narzędzia 
-                    w pracy z kursantami.
-                  </p>
+                  <p>{aboutText.journeyAcrobaticsP1}</p>
+                  <p>{aboutText.journeyAcrobaticsP2}</p>
                 </div>
               </div>
 
@@ -524,26 +557,18 @@ export function About() {
               <div className="pt-6 border-t border-white/10">
                 <h4 className="text-xl text-white mb-3">
                   <BookOpen className="w-6 h-6 inline-block mr-2 text-blue-400" />
-                  Wykształcenie
+                  {aboutText.journeyEducationTitle}
                 </h4>
                 <div className="space-y-4">
-                  <p>
-                    Jestem <span className="text-white">magistrem inżynierem elektrotechniki</span> z{" "}
-                    <span className="text-white">Politechniki Krakowskiej</span>.
-                  </p>
-                  <p>
-                    To wykształcenie również pomaga mi w rozumieniu fizyki narciarstwa — od{" "}
-                    <span className="text-blue-400">sprzętu, poprzez biomechanikę, po siły działające na narciarza</span>. 
-                    Potrafię nie tylko pokazać, jak coś zrobić, ale też wyjaśnić <span className="text-white">dlaczego</span> tak działa.
-                  </p>
+                  <p>{aboutText.journeyEducationP1}</p>
+                  <p>{aboutText.journeyEducationP2}</p>
                 </div>
               </div>
 
               {/* Podsumowanie */}
               <div className="pt-6 border-t border-white/10">
                 <p className="text-xl text-white text-center italic">
-                  To całe doświadczenie sprawia, że wystarczy mi kilka sekund, 
-                  aby dostrzec czego potrzebujesz w swoim rozwoju.
+                  {aboutText.journeySummary}
                 </p>
               </div>
             </div>
@@ -551,22 +576,22 @@ export function About() {
             {/* Certifications */}
             <div className="mt-8 pt-8 border-t border-white/10 flex flex-wrap justify-center gap-3">
               <div className="px-4 py-2 bg-blue-600/20 backdrop-blur-sm rounded-full border border-blue-400/30">
-                <span className="text-blue-300">ISIA Level 3</span>
+                <span className="text-blue-300">{aboutText.cert1}</span>
               </div>
               <div className="px-4 py-2 bg-blue-600/20 backdrop-blur-sm rounded-full border border-blue-400/30">
-                <span className="text-blue-300">Pol-Ski Instructor</span>
+                <span className="text-blue-300">{aboutText.cert2}</span>
               </div>
               <div className="px-4 py-2 bg-blue-600/20 backdrop-blur-sm rounded-full border border-blue-400/30">
-                <span className="text-blue-300">English Teaching</span>
+                <span className="text-blue-300">{aboutText.cert3}</span>
               </div>
               <div className="px-4 py-2 bg-blue-600/20 backdrop-blur-sm rounded-full border border-blue-400/30">
-                <span className="text-blue-300">Kurs Lawinowy</span>
+                <span className="text-blue-300">{aboutText.cert4}</span>
               </div>
               <div className="px-4 py-2 bg-blue-600/20 backdrop-blur-sm rounded-full border border-blue-400/30">
-                <span className="text-blue-300">Mgr Inż. Elektrotechniki</span>
+                <span className="text-blue-300">{aboutText.cert5}</span>
               </div>
               <div className="px-4 py-2 bg-blue-600/20 backdrop-blur-sm rounded-full border border-blue-400/30">
-                <span className="text-blue-300">Karate - Brązowy Pas</span>
+                <span className="text-blue-300">{aboutText.cert6}</span>
               </div>
             </div>
           </div>
@@ -586,32 +611,28 @@ export function About() {
           {/* Content */}
           <div className="relative z-10 p-8 md:p-12">
             <h3 className="text-3xl md:text-4xl text-white mb-8 text-center">
-              Styl i podejście
+              {aboutText.styleTitle}
             </h3>
             
             <div className="text-center mb-10">
               <p className="text-2xl md:text-3xl text-white italic mb-2">
-                "Rób to, co kochasz, a nie przepracujesz ani jednego dnia."
+                {aboutText.styleQuote}
               </p>
               <div className="h-px w-64 bg-gradient-to-r from-transparent via-white/20 to-transparent mx-auto mt-6"></div>
             </div>
 
             <div className="space-y-5 text-lg text-slate-300 leading-relaxed">
               <p className="text-center">
-                <span className="text-white">Bez stresu, bez presji</span> — za to z pełnym skupieniem, 
-                energią i radością z postępu.
+                {aboutText.styleP1}
               </p>
               <p>
-                Każdy kursant to dla mnie indywidualna historia i wspólna droga do lepszego zrozumienia narciarstwa. 
-                Wierzę, że każdy może osiągnąć harmonię ruchu, jeśli zrozumie, jak działa jego ciało i umysł na śniegu.
+                {aboutText.styleP2}
               </p>
               <p>
-                Dla jednych celem może być <span className="text-blue-400">mistrzostwo</span>, 
-                dla innych idealna forma <span className="text-blue-400">sportu rekreacyjnego i zdrowego aktywnego 
-                spędzania czasu</span>, krok po kroku, z pełnym szacunkiem do procesu i samego siebie.
+                {aboutText.styleP3}
               </p>
               <p className="text-xl text-white text-center pt-4 italic">
-                Jestem tutaj dla wszystkich.
+                {aboutText.styleSummary}
               </p>
             </div>
           </div>

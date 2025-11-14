@@ -3,45 +3,24 @@ import { ChevronDown, Volume2, VolumeX } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { api } from "../utils/api";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { useLanguage } from "../contexts/LanguageContext";
+import { getHeroText } from "../translations/hero";
 
 // Domyślne ustawienia YouTube video
-const DEFAULT_YOUTUBE_VIDEO_ID = "bxorxvJnoDc"; // Poprzedni film YouTube
+const DEFAULT_YOUTUBE_VIDEO_ID = "cv-ZzHMu3dQ"; // Nowy film YouTube
 const DEFAULT_VIDEO_START_TIME = 0; // Start od początku
 const DEFAULT_FALLBACK_IMAGE = "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1920";
 
 export function Hero() {
+  const { language } = useLanguage();
+  const t = getHeroText(language);
+  
   const [youtubeVideoId, setYoutubeVideoId] = useState(DEFAULT_YOUTUBE_VIDEO_ID);
   const [videoStartTime, setVideoStartTime] = useState(DEFAULT_VIDEO_START_TIME);
   const [fallbackImage, setFallbackImage] = useState(DEFAULT_FALLBACK_IMAGE);
-  const [subtitle, setSubtitle] = useState("POL-SKI Instructor Narciarstwa Zjazdowego • Level 3 + ISIA STAMP");
-  const [caption, setCaption] = useState("Precision. Patience. Power.");
   const [useYouTube, setUseYouTube] = useState(true);
   const [currentCaptionIndex, setCurrentCaptionIndex] = useState(0);
   const [videoError, setVideoError] = useState(false);
-
-  // Rotating captions - wartości z narciarstwa i karate
-  const rotatingCaptions = [
-    "Precision. Patience. Power.",
-    "Discipline. Focus. Excellence.",
-    "Balance. Control. Harmony.",
-    "Technique. Spirit. Passion.",
-    "Respect. Dedication. Progress.",
-    "Mind. Body. Mountain.",
-    "Keep Going. Keep Growing.",
-    "Mountains Are My Dojo.",
-    "From White Belt to Black Slope.",
-    "From White Slope to Black Belt.",
-    "Respect the Mountain. Conquer Yourself.",
-    "Every Turn. Every Edge.",
-    "Flow. Grace. Speed.",
-    "Master Your Movement.",
-    "Feel the Snow. Read the Mountain.",
-    "Perfection Through Repetition.",
-    "The Way of the Ski.",
-    "Train Like a Sensei.",
-    "Embrace the Journey.",
-    "Carve Your Skill With Me",
-  ];
 
   useEffect(() => {
     loadData();
@@ -50,10 +29,10 @@ export function Hero() {
   // Rotating captions effect
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentCaptionIndex((prev) => (prev + 1) % rotatingCaptions.length);
+      setCurrentCaptionIndex((prev) => (prev + 1) % t.rotatingCaptions.length);
     }, 3000); // Zmiana co 3 sekundy
     return () => clearInterval(interval);
-  }, [rotatingCaptions.length]);
+  }, [t.rotatingCaptions.length]);
 
   const loadData = async () => {
     try {
@@ -76,16 +55,8 @@ export function Hero() {
         setFallbackImage(heroData.fallbackImage);
       }
 
-      if (heroData && heroData.caption) {
-        setCaption(heroData.caption);
-      }
-
       if (heroData && heroData.videoStartTime !== undefined) {
         setVideoStartTime(heroData.videoStartTime);
-      }
-      
-      if (texts && texts.heroSubtitle) {
-        setSubtitle(texts.heroSubtitle);
       }
     } catch (error) {
       console.error("❌ Hero - Błąd podczas ładowania danych:", error);
@@ -173,11 +144,11 @@ export function Hero() {
             </div>
             <div className="h-px w-48 bg-gradient-to-r from-transparent via-white/40 to-transparent mx-auto mb-6"></div>
             <p className="text-xl md:text-2xl text-slate-200 tracking-wide mb-6">
-              {subtitle}
+              {t.subtitle}
             </p>
             {/* Static Karate Spirit line */}
             <p className="text-base md:text-lg text-slate-400 mb-3 tracking-wide">
-              In Spirit of Karate
+              {t.spiritLine}
             </p>
             {/* Rotating Caption */}
             <motion.p
@@ -188,7 +159,7 @@ export function Hero() {
               transition={{ duration: 0.5 }}
               className="text-lg md:text-xl text-slate-300 italic"
             >
-              {rotatingCaptions[currentCaptionIndex]}
+              {t.rotatingCaptions[currentCaptionIndex]}
             </motion.p>
           </div>
         </motion.div>
@@ -205,13 +176,13 @@ export function Hero() {
               onClick={() => document.getElementById("about")?.scrollIntoView({ behavior: "smooth" })}
               className="px-8 py-4 bg-white text-slate-950 hover:bg-slate-100 rounded-full transition-all transform hover:scale-105"
             >
-              Poznaj Mnie
+              {t.buttonAbout}
             </button>
             <button
               onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
               className="px-8 py-4 bg-white/5 hover:bg-white/10 backdrop-blur-sm text-white rounded-full transition-all border border-white/20"
             >
-              Zarezerwuj Lekcję
+              {t.buttonBook}
             </button>
           </motion.div>
 

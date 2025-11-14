@@ -7,8 +7,13 @@ import { Textarea } from "./ui/textarea";
 import { Label } from "./ui/label";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { api } from "../utils/api";
+import { useLanguage } from "../contexts/LanguageContext";
+import { getContactText } from "../translations/contact";
 
 export function Contact() {
+  const { language } = useLanguage();
+  const t = getContactText(language);
+  
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -21,43 +26,24 @@ export function Contact() {
   const [sending, setSending] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSending(true);
     setSuccess(false);
     
-try {
-  const res = await fetch("/api/sendEmail", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(formData),
-  });
-
-  const result = await res.json().catch(() => ({}));
-
-  if (res.ok && (result.success || !result.error)) {
-    setSuccess(true);
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      serviceType: "individual",
-      numberOfPeople: "1",
-      experienceLevel: "",
-      message: "",
-    });
-  } else {
-    console.error("Błąd:", result.error);
-    alert("❌ Nie udało się wysłać wiadomości. Spróbuj ponownie.");
-  }
-} catch (error) {
-  console.error("Błąd sieci:", error);
-  alert("❌ Brak połączenia z serwerem. Spróbuj ponownie później.");
-} finally {
-  setSending(false);
-}
-
+    try {
+      await api.saveMessage(formData);
+      setSuccess(true);
+      setFormData({ name: "", email: "", phone: "", serviceType: "individual", numberOfPeople: "1", experienceLevel: "", message: "" });
+      
+      // Show success message
+      setTimeout(() => setSuccess(false), 5000);
+    } catch (error) {
+      console.error("Error:", error);
+      alert(t.errorMessage);
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -71,10 +57,10 @@ try {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl text-white mb-4">
-            Zarezerwuj Lekcję
+            {t.title}
           </h2>
           <p className="text-xl text-slate-300">
-           Gotowy/a podnieść swoje umiejętności narciarskie?Wybierz lekcję, Full Day, Custom Experience lub Social Media Day — dopasowane do Twojego stylu i celów.
+            {t.subtitle}
           </p>
         </motion.div>
 
@@ -88,12 +74,12 @@ try {
             className="space-y-8"
           >
             <div>
-              <h3 className="text-2xl text-white mb-6">Skontaktuj się</h3>
+              <h3 className="text-2xl text-white mb-6">{t.contactTitle}</h3>
               <div className="space-y-4">
                 <div className="flex items-start gap-4">
                   <Mail className="w-6 h-6 text-blue-500 mt-1" />
                   <div>
-                    <p className="text-slate-300">Email</p>
+                    <p className="text-slate-300">{t.emailText}</p>
                     <a href="mailto:info.skiwithme@gmail.com" className="text-white hover:text-blue-400">
                       info.skiwithme@gmail.com
                     </a>
@@ -102,7 +88,7 @@ try {
                 <div className="flex items-start gap-4">
                   <Phone className="w-6 h-6 text-blue-500 mt-1" />
                   <div>
-                    <p className="text-slate-300">Telefon / WhatsApp</p>
+                    <p className="text-slate-300">{t.phoneText}</p>
                     <a href="tel:+4748511023" className="text-white hover:text-blue-400">
                       +47 485 11 023
                     </a>
@@ -111,22 +97,22 @@ try {
                 <div className="flex items-start gap-4">
                   <MapPin className="w-6 h-6 text-blue-500 mt-1" />
                   <div>
-                    <p className="text-slate-300">Lokalizacja</p>
-                    <p className="text-white">Oslo, Norwegia</p>
+                    <p className="text-slate-300">{t.locationText}</p>
+                    <p className="text-white">{t.locationValue}</p>
                   </div>
                 </div>
               </div>
             </div>
 
             <div className="bg-slate-800/50 backdrop-blur-sm p-6 rounded-xl border border-slate-700">
-              <h4 className="text-white mb-3">Czego możesz się spodziewać</h4>
+              <h4 className="text-white mb-3">{t.expectTitle}</h4>
               <ul className="space-y-2 text-slate-300">
-                <li>• Instrukcja dostosowana do Twojego poziomu</li>
-                <li>• Analiza wideo i feedback</li>
-                <li>• Podejście stawiające bezpieczeństwo na pierwszym miejscu</li>
-                <li>• Dostępne lekcje grupowe lub indywidualne</li>
-                <li>• Wszystkie tereny i warunki</li>
-                <li>• Filozofia karate w nauczaniu narciarstwa</li>
+                <li>• {t.expect1}</li>
+                <li>• {t.expect2}</li>
+                <li>• {t.expect3}</li>
+                <li>• {t.expect4}</li>
+                <li>• {t.expect5}</li>
+                <li>• {t.expect6}</li>
               </ul>
             </div>
           </motion.div>
@@ -142,7 +128,7 @@ try {
               <div className="grid md:grid-cols-2 gap-4">
                 <Input
                   type="text"
-                  placeholder="Twoje Imię"
+                  placeholder={t.namePlaceholder}
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   required
@@ -150,7 +136,7 @@ try {
                 />
                 <Input
                   type="email"
-                  placeholder="Twój Email"
+                  placeholder={t.emailPlaceholder}
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   required
@@ -160,14 +146,14 @@ try {
               
               <Input
                 type="tel"
-                placeholder="Telefon / WhatsApp (opcjonalnie)"
+                placeholder={t.phonePlaceholder}
                 value={formData.phone}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                 className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-400"
               />
 
               <div className="space-y-3">
-                <Label className="text-white">Czego szukasz?</Label>
+                <Label className="text-white">{t.lookingFor}</Label>
                 <RadioGroup
                   value={formData.serviceType}
                   onValueChange={(value) => setFormData({ ...formData, serviceType: value })}
@@ -176,31 +162,31 @@ try {
                   <div className="flex items-center space-x-3 bg-slate-800/50 p-3 rounded-lg border border-slate-700 hover:border-slate-600 transition-colors">
                     <RadioGroupItem value="individual" id="individual" />
                     <Label htmlFor="individual" className="text-slate-200 cursor-pointer flex-1">
-                      Lekcje narciarskie
+                      {t.serviceIndividual}
                     </Label>
                   </div>
                   <div className="flex items-center space-x-3 bg-slate-800/50 p-3 rounded-lg border border-slate-700 hover:border-slate-600 transition-colors">
                     <RadioGroupItem value="online" id="online" />
                     <Label htmlFor="online" className="text-slate-200 cursor-pointer flex-1">
-                      Spotkanie online / Wideoanaliza
+                      {t.serviceOnline}
                     </Label>
                   </div>
                   <div className="flex items-center space-x-3 bg-slate-800/50 p-3 rounded-lg border border-slate-700 hover:border-slate-600 transition-colors">
                     <RadioGroupItem value="fullday" id="fullday" />
                     <Label htmlFor="fullday" className="text-slate-200 cursor-pointer flex-1">
-                      Full Day Booking (rodzina/firma)
+                      {t.serviceFullday}
                     </Label>
                   </div>
                   <div className="flex items-center space-x-3 bg-slate-800/50 p-3 rounded-lg border border-slate-700 hover:border-slate-600 transition-colors">
                     <RadioGroupItem value="video" id="video" />
                     <Label htmlFor="video" className="text-slate-200 cursor-pointer flex-1">
-                      Nagrywanie i edycja filmów
+                      {t.serviceVideo}
                     </Label>
                   </div>
                   <div className="flex items-center space-x-3 bg-slate-800/50 p-3 rounded-lg border border-slate-700 hover:border-slate-600 transition-colors">
                     <RadioGroupItem value="custom" id="custom" />
                     <Label htmlFor="custom" className="text-slate-200 cursor-pointer flex-1">
-                      Inne (dzień skrojony pod klienta)
+                      {t.serviceCustom}
                     </Label>
                   </div>
                 </RadioGroup>
@@ -208,54 +194,54 @@ try {
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label className="text-white">Liczba osób</Label>
+                  <Label className="text-white">{t.numberOfPeople}</Label>
                   <Input
                     type="number"
                     min="1"
-                    placeholder="Ile osób?"
+                    placeholder={t.peoplePlaceholder}
                     value={formData.numberOfPeople}
                     onChange={(e) => setFormData({ ...formData, numberOfPeople: e.target.value })}
                     className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-400"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-white">Poziom zaawansowania</Label>
+                  <Label className="text-white">{t.experienceLevel}</Label>
                   <select
                     value={formData.experienceLevel}
                     onChange={(e) => setFormData({ ...formData, experienceLevel: e.target.value })}
                     className="w-full bg-slate-800 border border-slate-700 text-white rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     required
                   >
-                    <option value="">Wybierz poziom</option>
-                    <option value="beginner">Początkujący</option>
-                    <option value="intermediate">Średniozaawansowany</option>
-                    <option value="advanced">Zaawansowany</option>
-                    <option value="expert">Expert</option>
-                    <option value="mixed">Mieszany (grupa)</option>
+                    <option value="">{t.selectLevel}</option>
+                    <option value="beginner">{t.levelBeginner}</option>
+                    <option value="intermediate">{t.levelIntermediate}</option>
+                    <option value="advanced">{t.levelAdvanced}</option>
+                    <option value="expert">{t.levelExpert}</option>
+                    <option value="mixed">{t.levelMixed}</option>
                   </select>
                 </div>
               </div>
 
               <div>
                 <Label className="text-white mb-2 block">
-                  Szczegóły 
-                  {formData.serviceType === 'video' && ' - Nagrywanie i edycja'}
-                  {formData.serviceType === 'fullday' && ' - Full Day Booking'}
-                  {formData.serviceType === 'custom' && ' - Dzień skrojony pod klienta'}
-                  {formData.serviceType === 'online' && ' - Spotkanie online / Wideoanaliza'}
-                  {formData.serviceType === 'individual' && ' - Cele i preferencje'}
+                  {t.detailsLabel}
+                  {formData.serviceType === 'video' && t.detailsVideo}
+                  {formData.serviceType === 'fullday' && t.detailsFullday}
+                  {formData.serviceType === 'custom' && t.detailsCustom}
+                  {formData.serviceType === 'online' && t.detailsOnline}
+                  {formData.serviceType === 'individual' && t.detailsIndividual}
                 </Label>
                 <Textarea
                   placeholder={
                     formData.serviceType === 'online'
-                      ? "Np. 'Chcę przeanalizować moją technikę carvingu, mam nagranie z Tryvann. Dostępny/a: poniedziałki i środy 18:00-20:00, preferuję Zoom...'"
+                      ? t.placeholderOnline
                       : formData.serviceType === 'video' 
-                      ? "Np. 'Chcę 60-sekundowy Instagram reel z carvingu na Tryvann, dynamiczny edit z muzyką. Dostępny/a: sobota 15.02, cały dzień...'"
+                      ? t.placeholderVideo
                       : formData.serviceType === 'fullday'
-                      ? "Np. 'Grupa 6 osób (mix poziomów), preferujemy freeride z elementami bezpieczeństwa, chcemy nagranie + edit. Dostępni: weekendy luty/marzec...'"
+                      ? t.placeholderFullday
                       : formData.serviceType === 'custom'
-                      ? "Np. 'Szukam freeride skiturowego z nagraniem analitycznym, 2 osoby zaawansowane, Hemsedal. Lub lekcje grupowe weekend 4 osoby podobny poziom. Dostępni: 20-25 lutego...'"
-                      : "Np. 'Mam 35 lat, dobra kondycja, jeżdżę od 5 lat. Chcę poprawić carving. Dostępny/a: wtorki 10:00-14:00 lub weekendy luty/marzec. Ewentualnie weekend 20-21.02 z grupą 4 znajomych...'"
+                      ? t.placeholderCustom
+                      : t.placeholderIndividual
                   }
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
@@ -270,7 +256,7 @@ try {
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white py-6 gap-2"
                 disabled={sending}
               >
-                {sending ? "Wysyłanie..." : "Wyślij Zapytanie"}
+                {sending ? t.sending : t.submitButton}
                 <Send className="w-4 h-4" />
               </Button>
               
@@ -281,7 +267,7 @@ try {
                   className="p-4 bg-green-500/20 border border-green-500/50 rounded-lg"
                 >
                   <p className="text-green-400 text-center">
-                    ✅ Dziękuję! Wiadomość została wysłana. Odpowiem najszybciej jak to możliwe!
+                    {t.successFinal}
                   </p>
                 </motion.div>
               )}
@@ -299,7 +285,7 @@ try {
         className="text-center mt-24 pt-12 border-t border-slate-800"
       >
         <p className="text-slate-400">
-          © 2025 SkiSensei. Wszelkie prawa zastrzeżone.
+          {t.copyright}
         </p>
       </motion.div>
     </section>

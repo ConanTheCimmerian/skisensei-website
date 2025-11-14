@@ -1,7 +1,12 @@
 import { motion } from "motion/react";
 import { Calendar, MapPin, Clock, Mountain, AlertCircle, ExternalLink } from "lucide-react";
+import { useLanguage } from "../contexts/LanguageContext";
+import { getAvailabilityText } from "../translations/availability";
 
 export function Availability() {
+  const { language } = useLanguage();
+  const t = getAvailabilityText(language);
+  
   return (
     <section id="availability" className="py-24 bg-slate-950">
       <div className="container mx-auto px-4">
@@ -13,15 +18,15 @@ export function Availability() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl text-white mb-4">
-            Dostępność & Harmonogram
+            {t.title}
           </h2>
           <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-4">
-            Sprawdź kiedy możesz zarezerwować lekcję
+            {t.subtitle}
           </p>
           <div className="max-w-2xl mx-auto bg-blue-900/30 border border-blue-700/50 rounded-lg p-4">
             <p className="text-slate-200">
-              ⚠️ <span className="text-white font-semibold">Ważne:</span> Podane godziny to dostępność do <span className="text-blue-300 font-semibold">rezerwacji lekcji</span>. Jeśli nie mam zarezerwowanej lekcji, nie jestem na stoku. 
-              <span className="block mt-2 text-slate-300">Rezerwuj poprzez formularz kontaktowy, WhatsApp (+47 485 11 023), email lub Facebook.</span>
+              ⚠️ <span className="text-white font-semibold">{t.warningImportant}</span> {t.warningText} <span className="text-blue-300 font-semibold">{t.warningBooking}</span>{t.warningNotOnSlope}
+              <span className="block mt-2 text-slate-300">{t.warningBookThrough}</span>
             </p>
           </div>
 
@@ -42,10 +47,10 @@ export function Availability() {
               <Calendar className="w-5 h-5 text-blue-400" />
               <div className="flex-1 text-left">
                 <p className="text-white group-hover:text-blue-300 transition-colors">
-                  Zobacz poglądowy kalendarz dostępności
+                  {t.calendarLinkText}
                 </p>
                 <p className="text-xs text-slate-400 mt-1">
-                  ℹ️ Nie wszystkie lekcje są w nim wprowadzane - ostateczne potwierdzenie przez wiadomości
+                  {t.calendarLinkInfo}
                 </p>
               </div>
               <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-blue-400 transition-colors" />
@@ -67,8 +72,8 @@ export function Availability() {
               <div className="flex items-start gap-4 mb-6">
                 <MapPin className="w-6 h-6 text-blue-500 mt-1 flex-shrink-0" />
                 <div>
-                  <h3 className="text-2xl text-white mb-2">Oslo Vinterpark</h3>
-                  <p className="text-slate-400">Tryvannsveien 64, Oslo</p>
+                  <h3 className="text-2xl text-white mb-2">{t.osloVinterpark}</h3>
+                  <p className="text-slate-400">{t.osloAddress}</p>
                 </div>
               </div>
               
@@ -76,14 +81,14 @@ export function Availability() {
                 <div className="flex items-start gap-3">
                   <Clock className="w-5 h-5 text-slate-400 mt-1 flex-shrink-0" />
                   <div className="flex-1">
-                    <p className="text-white">Poniedziałek, Środa & Piątek</p>
+                    <p className="text-white">{t.monWedFri}</p>
                     <p className="text-slate-300">10:00 - 17:00</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <Clock className="w-5 h-5 text-slate-400 mt-1 flex-shrink-0" />
                   <div className="flex-1">
-                    <p className="text-white">Wtorek & Czwartek</p>
+                    <p className="text-white">{t.tueThur}</p>
                     <p className="text-slate-300">10:00 - 21:00</p>
                   </div>
                 </div>
@@ -101,27 +106,27 @@ export function Availability() {
               <div className="flex items-start gap-4 mb-6">
                 <MapPin className="w-6 h-6 text-amber-500 mt-1 flex-shrink-0" />
                 <div>
-                  <h3 className="text-2xl text-white mb-2">Kongsberg Skisenter</h3>
-                  <p className="text-slate-400">lub inne stoki Skimore</p>
+                  <h3 className="text-2xl text-white mb-2">{t.kongsbergTitle}</h3>
+                  <p className="text-slate-400">{t.kongsbergAlt}</p>
                 </div>
               </div>
               
               <div className="space-y-3">
                 <p className="text-slate-300">
-                  Lokalizacja alternatywna dostępna gdy:
+                  {t.kongsbergWhen}
                 </p>
                 <ul className="space-y-2 text-slate-300 ml-2">
                   <li className="flex items-start gap-2">
                     <span className="text-amber-500 mt-1">•</span>
-                    <span>Pogoda w Oslo jest beznadziejna</span>
+                    <span>{t.kongsbergWeather}</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-amber-500 mt-1">•</span>
-                    <span>Zbiorę lekcję na cały dzień w innym ośrodku Skimore</span>
+                    <span>{t.kongsbergFullDay}</span>
                   </li>
                 </ul>
                 <p className="text-xs text-slate-500 mt-3">
-                  Skontaktuj się aby sprawdzić dostępność
+                  {t.kongsbergContact}
                 </p>
               </div>
             </motion.div>
@@ -138,29 +143,29 @@ export function Availability() {
             <div className="flex items-start gap-4 mb-6">
               <Calendar className="w-6 h-6 text-blue-400 mt-1 flex-shrink-0" />
               <div>
-                <h3 className="text-2xl text-white mb-2">Weekendy & Exclusive Ski Experience</h3>
+                <h3 className="text-2xl text-white mb-2">{t.weekendsTitle}</h3>
               </div>
             </div>
 
             <div className="space-y-4">
               <div className="bg-blue-900/20 border border-blue-700/30 rounded-lg p-4">
                 <p className="text-blue-200 mb-2">
-                  <span className="text-white font-semibold">🎿 Weekendy - Priorytet:</span>
+                  <span className="text-white font-semibold">{t.weekendsPriority}</span>
                 </p>
                 <ul className="space-y-2 text-slate-300 ml-2">
                   <li className="flex items-start gap-2">
                     <span className="text-blue-400 mt-1">•</span>
-                    <span><span className="text-white">Full Day Booking:</span> Zarezerwuj cały dzień dostosowany do Twoich potrzeb</span>
+                    <span><span className="text-white">{t.weekendsFullDay}</span> {t.weekendsFullDayDesc}</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-blue-400 mt-1">•</span>
-                    <span><span className="text-white">Wymarzony Dzień na Nartach:</span> Opisz swój wymarzony dzień na nartach i zapytaj o dostępny termin. Zaplanuję dla Ciebie niezapomniane przeżycia i uwiecznię je na rolce z aparatu.</span>
+                    <span><span className="text-white">{t.weekendsDreamDay}</span> {t.weekendsDreamDayDesc}</span>
                   </li>
                 </ul>
               </div>
 
               <div className="text-slate-400 text-sm">
-                💡 Pakiety indywidualne są normalnie priorytetowane od <span className="text-slate-200">poniedziałku do piątku</span>
+                {t.weekendsIndividual} <span className="text-slate-200">{t.weekendsMonFri}</span>
               </div>
             </div>
           </motion.div>
@@ -178,13 +183,13 @@ export function Availability() {
               <div>
                 <h4 className="text-xl text-white mb-3 flex items-center gap-2">
                   <Mountain className="w-5 h-5" />
-                  Wycieczki Pozatrasowe / Freeride
+                  {t.backcountryTitle}
                 </h4>
                 <p className="text-slate-300 mb-3">
-                  Ze względu na ekstremalne warunki pogodowe, aby zmaksymalizować szansę na najlepsze warunki, <span className="text-white font-semibold">ostateczna lokalizacja zostanie wybrana na kilka dni przed Twoim przyjazdem</span>.
+                  {t.backcountryText} <span className="text-white font-semibold">{t.backcountryHighlight}</span>.
                 </p>
                 <p className="text-slate-400">
-                  Na bieżąco monitoruję sytuację pogodową oraz raporty lawinowe, aby zapewnić maksymalne bezpieczeństwo i najlepsze możliwe warunki do jazdy.
+                  {t.backcountryMonitoring}
                 </p>
               </div>
             </div>

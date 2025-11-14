@@ -1,7 +1,12 @@
 import { motion } from "motion/react";
 import { Youtube, Camera, Film, Instagram as InstagramIcon, Users, Handshake, Facebook } from "lucide-react";
+import { useLanguage } from "../contexts/LanguageContext";
+import { getPortfolioText } from "../translations/portfolio";
 
 export function Portfolio() {
+  const { language } = useLanguage();
+  const t = getPortfolioText(language);
+  
   return (
     <section id="gallery" className="py-24 bg-slate-900">
       <div className="container mx-auto px-4">
@@ -13,18 +18,17 @@ export function Portfolio() {
           className="max-w-4xl mx-auto text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl text-white mb-6">
-            Media i inspiracja
+            {t.title}
           </h2>
           <div className="space-y-5 text-lg text-slate-300 leading-relaxed">
             <p>
-              Narciarstwo to nie tylko nauczanie, ale też inspiracja.
+              {t.paragraph1}
             </p>
             <p>
-              Tworzę <span className="text-white">autorskie treści wideo</span> — zarówno na YouTube, jak i Instagramie — 
-              łącząc profesjonalne ujęcia z autentyczną narracją.
+              {t.paragraph2}
             </p>
             <p className="text-xl text-white">
-              To setki godzin materiału z norweskich gór: carving, skitury, przygody w śniegu i codzienność instruktora.
+              {t.paragraph3}
             </p>
           </div>
         </motion.div>
@@ -93,20 +97,19 @@ export function Portfolio() {
               <Film className="w-8 h-8 text-blue-400" />
             </div>
             <p className="text-xl text-center text-white mb-4">
-              Wszystko tworzę sam
+              {t.creationTitle}
             </p>
             <p className="text-slate-300 text-center leading-relaxed mb-6">
-              Ujęcia, montaż, drony, Insta360, storytelling. 
-              Każde wideo to opowieść o precyzji, emocjach i podróży po górskim świecie.
+              {t.creationSubtitle}
             </p>
             
             {/* Video Production Services */}
             <div className="bg-blue-900/20 border border-blue-700/30 rounded-xl p-6 mb-6">
               <p className="text-blue-200 text-center leading-relaxed">
-                <span className="text-white font-semibold">🎬 Zlecenia filmowe:</span> Jeśli podoba Ci się mój styl i chciałbyś zlecić mi wykonanie filmu, to jest taka możliwość! Specjalizuję się w narciarstwie, ale nagrywam i edytuję również inny content — praktycznie w każdych warunkach, czy to na stoku, czy w dzikich górach.
+                <span className="text-white font-semibold">{t.videoProductionTitle}</span> {t.videoProductionText}
               </p>
               <p className="text-slate-400 text-center text-sm mt-3">
-                Szczegóły w ofercie i cenniku (wkrótce dostępne)
+                {t.videoProductionDetails}
               </p>
             </div>
 
@@ -116,16 +119,14 @@ export function Portfolio() {
               <Handshake className="w-6 h-6 text-blue-400" />
             </div>
             <p className="text-slate-300 text-center leading-relaxed">
-              Dzięki temu projektowi powstała <span className="text-white">przestrzeń, w której spotykają się pasja, 
-              estetyka i autentyczność</span> — otwarta nie tylko dla uczniów, ale też dla{" "}
-              <span className="text-blue-400">marek, sponsorów i partnerów</span>, którzy podzielają ten sposób 
-              myślenia o górach i narciarstwie.
+              {t.brandCollabText} <span className="text-white">{t.brandCollabHighlight}</span> {t.brandCollabText2}{" "}
+              <span className="text-blue-400">{t.brandCollabTypes}</span>{t.brandCollabEnd}
             </p>
             
             {/* Partners & Affiliates */}
             <div className="mt-6 pt-6 border-t border-slate-700/50">
               <p className="text-slate-400 text-center mb-4">
-                Współpracuję z:
+                {t.partnersTitle}
               </p>
               <div className="space-y-3">
                 <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700/30">
@@ -138,10 +139,10 @@ export function Portfolio() {
                     >
                       Insta360.com
                     </a>
-                    {" "}— sprzęt, którym nagrywam większość contentu
+                    {" "}{t.insta360Description}
                   </p>
                   <p className="text-slate-400 text-sm text-center mt-2">
-                    Kod afiliacyjny: <span className="text-white font-mono">INREVW0</span>
+                    {t.affiliateCode} <span className="text-white font-mono">INREVW0</span>
                   </p>
                 </div>
                 <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700/30">
@@ -154,12 +155,12 @@ export function Portfolio() {
                     >
                       Modern-houses.eu
                     </a>
-                    {" "}— domki mobilne tiny house i konstrukcje metalowo-drewniane
+                    {" "}{t.modernHousesDescription}
                   </p>
                 </div>
               </div>
               <p className="text-slate-400 text-sm text-center mt-4 leading-relaxed">
-                Zakup u tych producentów zapewni mi wsparcie do rozwoju narciarskiego 🙏
+                {t.supportMessage}
               </p>
             </div>
           </div>
